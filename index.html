@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jayesh Dhoke - Data Analyst Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-main: #050814;
+            --bg-card: rgba(9, 12, 30, 0.96);
+            --bg-card-soft: rgba(16, 22, 52, 0.9);
+            --accent-1: #4f46e5;
+            --accent-2: #22d3ee;
+            --accent-3: #a855f7;
+            --text-main: #f9fafb;
+            --text-soft: #9ca3af;
+            --border-soft: rgba(148, 163, 184, 0.3);
+            --shadow-strong: 0 24px 80px rgba(15, 23, 42, 0.8);
+            --radius-lg: 22px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* DATA ANALYSIS BACKGROUND */
+        .data-background {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.28) 0, transparent 55%),
+                radial-gradient(circle at 90% 80%, rgba(34, 211, 238, 0.25) 0, transparent 55%),
+                radial-gradient(circle at 50% 0%, rgba(168, 85, 247, 0.2) 0, transparent 55%),
+                #020617;
+            overflow: hidden;
+        }
+
+        /* Faint grid */
+        .data-background::before {
+            content: '';
+            position: absolute;
+            inset: -100px;
+            background-image:
+                linear-gradient(rgba(148,163,184,0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148,163,184,0.08) 1px, transparent 1px);
+            background-size: 70px 70px;
+            opacity: 0.35;
+            transform: translate3d(0, 0, 0);
+            animation: gridMove 26s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0%   { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(70px, 70px, 0); }
+        }
+
+        /* Floating “metrics” / SQL snippets */
+        .floating-data {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            color: rgba(226, 232, 240, 0.35);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+            animation: floatMetric 18s linear infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes floatMetric {
+            0%   { transform: translateY(40px); opacity: 0; }
+            10%  { opacity: 0.7; }
+            90%  { opacity: 0.7; }
+            100% { transform: translateY(-60vh); opacity: 0; }
+        }
+
+        /* Simple animated line chart background */
+        .chart-lines {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.13;
+        }
+
+        .chart-lines svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 10;
+            padding: 0.9rem 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: radial-gradient(circle at top left, rgba(79,70,229,0.22), transparent 55%)
+                        rgba(15,23,42,0.84);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(148,163,184,0.3);
+            box-shadow: 0 18px 40px rgba(15,23,42,0.7);
+        }
+
+        .logo {
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--accent-2), var(--accent-1), var(--accent-3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.7rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-soft);
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            padding-bottom: 4px;
+            transition: color 0.25s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-2), var(--accent-1));
+            border-radius: 999px;
+            transition: width 0.25s ease;
+        }
+
+        .nav-links a:hover {
+            color: #e5e7eb;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* LAYOUT */
+        main {
+            position: relative;
+            z-index: 1;
+        }
+
+        section {
+            padding: 6rem 6% 4rem;
+        }
+
+        .section-inner {
+            max-width: 1180px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(15,23,42,0.92), rgba(15,23,42,0.96));
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-soft);
+            box-shadow: var(--shadow-strong);
+            padding: 2.5rem 2.3rem 2.8rem;
+            backdrop-filter: blur(18px);
+        }
+
+        .section-title {
+            font-size: 2.1rem;
+            margin-bottom: 1.8rem;
+            color: #e5e7eb;
+            text-align: left;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 32px;
+            height: 3px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--accent-2), var(--accent-1), var(--accent-3));
+        }
+
+        .section-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-soft);
+            margin-bottom: 1.3rem;
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            padding-top: 6.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-container {
+            max-width: 1180px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+            gap: 3.5rem;
+            align-items: center;
+        }
+
+        .profile-image-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;   /* 👈 image + badge vertical */
+    align-items: center;      /* 👈 center me rakhega */
+    justify-content: center;
+    gap: 0.75rem;             /* 👈 photo aur badge ke beech space */
+}
+
+
+        .profile-ring {
+            position: absolute;
+            inset: -10px;
+            border-radius: 50%;
+            border: 1px solid rgba(148,163,184,0.45);
+            background: conic-gradient(from 220deg,
+                rgba(79,70,229,0.12),
+                rgba(34,211,238,0.28),
+                rgba(168,85,247,0.3),
+                transparent 70%);
+            filter: blur(2px);
+            animation: spinRing 22s linear infinite;
+        }
+
+        @keyframes spinRing {
+            0%   { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .profile-image {
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            border: 4px solid rgba(15,23,42,0.8);
+            box-shadow: 0 22px 60px rgba(15,23,42,0.9);
+            background: radial-gradient(circle at 20% 0%, var(--accent-2), var(--accent-1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 120px;
+            color: #f9fafb;
+            position: relative;
+            z-index: 1;
+        }
+
+       .name-badge {
+    /* position: absolute;  👈 ye hata do */
+    /* bottom: -18px;       👈 ye bhi */
+    /* left: 50%;           👈 ye bhi */
+    /* transform: translateX(-50%); 👈 ye bhi */
+
+    margin-top: 0.3rem;  /* photo ke thoda niche space */
+
+    padding: 0.7rem 1.9rem;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.6);
+    background: radial-gradient(circle at top left, rgba(34,211,238,0.28), transparent 55%)
+                rgba(15,23,42,0.98);
+    color: #e5e7eb;
+    font-weight: 600;
+    font-size: 0.98rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 14px 40px rgba(15,23,42,0.85);
+    white-space: nowrap;   /* 👈 ek hi line me rakhega */
+    z-index: 1;
+}
+
+
+
+        .name-badge span {
+            font-size: 1.1rem;
+            color: var(--accent-2);
+        }
+
+        .hero-content {
+            color: #e5e7eb;
+        }
+
+        .hero-kicker {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--text-soft);
+            margin-bottom: 0.6rem;
+        }
+
+        .hero h1 {
+            font-size: 2.6rem;
+            line-height: 1.2;
+            margin-bottom: 0.6rem;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--accent-2), var(--accent-1), var(--accent-3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-tagline {
+            font-size: 1.1rem;
+            color: var(--text-soft);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-metrics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.4rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-pill {
+            padding: 0.6rem 1rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148,163,184,0.5);
+            font-size: 0.86rem;
+            color: #cbd5f5;
+            background: rgba(15,23,42,0.9);
+        }
+
+        .hero-content p {
+            font-size: 0.98rem;
+            line-height: 1.7;
+            color: var(--text-soft);
+            margin-bottom: 1.8rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.9rem;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.9rem 1.9rem;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            gap: 0.5rem;
+        }
+
+        .cta-primary {
+            background: linear-gradient(135deg, var(--accent-2), var(--accent-1));
+            color: #0b1020;
+            box-shadow: 0 14px 40px rgba(56,189,248,0.35);
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 50px rgba(59,130,246,0.55);
+        }
+
+        .cta-outline {
+            background: transparent;
+            border-color: rgba(148,163,184,0.7);
+            color: #e5e7eb;
+        }
+
+        .cta-outline:hover {
+            background: rgba(15,23,42,0.9);
+            border-color: var(--accent-1);
+        }
+
+        /* ABOUT */
+        .about-content {
+            max-width: 900px;
+            font-size: 0.98rem;
+            line-height: 1.9;
+            color: var(--text-soft);
+        }
+
+        /* SKILLS */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 1.8rem;
+            margin-top: 1.3rem;
+        }
+
+        .skill-card {
+            background: var(--bg-card-soft);
+            padding: 1.6rem 1.5rem 1.7rem;
+            border-radius: 18px;
+            border: 1px solid rgba(148,163,184,0.45);
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+            cursor: default;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            inset: -60%;
+            background: radial-gradient(circle at 0 0,
+                        rgba(34,211,238,0.16),
+                        transparent 55%);
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: -1;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(96,165,250,0.9);
+            box-shadow: 0 18px 50px rgba(15,23,42,0.9);
+        }
+
+        .skill-card:hover::before {
+            opacity: 1;
+            transform: translate3d(10px, 10px, 0);
+        }
+
+        .skill-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .skill-card p {
+            font-size: 0.92rem;
+            color: var(--text-soft);
+        }
+
+        /* PROJECTS */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.8rem;
+            margin-top: 1.3rem;
+        }
+
+        .project-card {
+            background: var(--bg-card-soft);
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(148,163,184,0.4);
+            box-shadow: 0 16px 40px rgba(15,23,42,0.9);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-7px);
+            border-color: rgba(96,165,250,0.9);
+            box-shadow: 0 22px 60px rgba(15,23,42,1);
+        }
+
+        .project-image {
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.4rem;
+            background: radial-gradient(circle at 0 0, rgba(34,211,238,0.15), transparent 55%),
+                        radial-gradient(circle at 100% 100%, rgba(168,85,247,0.2), transparent 55%),
+                        linear-gradient(135deg, var(--accent-1), #111827);
+        }
+
+        .project-content {
+            padding: 1.4rem 1.5rem 1.6rem;
+            flex: 1;
+        }
+
+        .project-content h3 {
+            font-size: 1.08rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .project-content p {
+            font-size: 0.9rem;
+            color: var(--text-soft);
+            margin-bottom: 0.9rem;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.9rem;
+            color: var(--accent-2);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .project-link::after {
+            content: '↗';
+            font-size: 0.85rem;
+            transition: transform 0.2s ease;
+        }
+
+        .project-card:hover .project-link::after {
+            transform: translateX(2px);
+        }
+
+        /* CONTACT */
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .contact-card {
+            position: relative;
+            background: var(--bg-card-soft);
+            padding: 1.7rem 1.4rem 1.8rem;
+            border-radius: 18px;
+            border: 1px solid rgba(148,163,184,0.4);
+            text-align: left;
+            overflow: hidden;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            inset: -50%;
+            background: radial-gradient(circle at 0 0, rgba(79,70,229,0.3), transparent 55%);
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(96,165,250,0.9);
+            box-shadow: 0 18px 50px rgba(15,23,42,1);
+        }
+
+        .contact-card:hover::before {
+            opacity: 1;
+            transform: translate3d(10px, 10px, 0);
+        }
+
+        .contact-icon {
+            font-size: 2rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .contact-card h3 {
+            font-size: 0.98rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .contact-card a {
+            color: var(--accent-2);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .contact-card p {
+            font-size: 0.9rem;
+            color: var(--text-soft);
+        }
+
+        footer {
+            padding: 2rem 6% 2.5rem;
+            text-align: center;
+            color: var(--text-soft);
+            font-size: 0.85rem;
+        }
+
+        footer span {
+            color: var(--accent-2);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: left;
+            }
+
+            .hero {
+                padding-top: 7rem;
+            }
+
+            .profile-image-container {
+                order: -1;
+                margin-bottom: 1.4rem;
+            }
+
+            .section-inner {
+                padding: 2rem 1.7rem 2.1rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .navbar {
+                padding-inline: 5%;
+            }
+            .nav-links {
+                gap: 1.1rem;
+                font-size: 0.85rem;
+            }
+            .hero h1 {
+                font-size: 2.1rem;
+            }
+            .profile-image {
+                width: 220px;
+                height: 220px;
+                font-size: 90px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="data-background">
+        <!-- Floating SQL / metric text -->
+        <div class="floating-data" style="top: 12%; left: 8%; animation-delay: 0s;">SELECT AVG(revenue) FROM sales;</div>
+        <div class="floating-data" style="top: 22%; left: 75%; animation-delay: 2s;">CTR &gt; 0.07 AND bounce_rate &lt; 0.35</div>
+        <div class="floating-data" style="top: 46%; left: 14%; animation-delay: 4.5s;">GROUP BY segment, month</div>
+        <div class="floating-data" style="top: 65%; left: 68%; animation-delay: 6.5s;">rolling_30d_churn_rate</div>
+        <div class="floating-data" style="top: 82%; left: 28%; animation-delay: 8s;">ORDER BY impact_score DESC</div>
+        <div class="floating-data" style="top: 18%; left: 50%; animation-delay: 9.5s;">forecast_demand_2025</div>
+        <div class="floating-data" style="top: 55%; left: 88%; animation-delay: 11s;">COUNT(DISTINCT customer_id)</div>
+        <div class="floating-data" style="top: 72%; left: 6%; animation-delay: 12.5s;">conversion_rate &gt; target</div>
+
+        <!-- Soft animated chart lines -->
+        <div class="chart-lines">
+            <svg preserveAspectRatio="none">
+                <polyline points="0,380 80,340 160,360 240,300 320,310 400,260 480,285 560,230 640,250 720,210 800,220"
+                          fill="none"
+                          stroke="rgba(94,234,212,0.55)"
+                          stroke-width="2.2"
+                          stroke-linecap="round">
+                    <animate attributeName="stroke-dasharray"
+                             from="0,1000"
+                             to="1000,0"
+                             dur="14s"
+                             repeatCount="indefinite" />
+                </polyline>
+                <polyline points="0,420 100,410 200,390 300,395 400,380 500,360 600,370 700,340 800,335"
+                          fill="none"
+                          stroke="rgba(129,140,248,0.5)"
+                          stroke-width="1.6"
+                          stroke-linecap="round">
+                    <animate attributeName="stroke-dashoffset"
+                             from="0"
+                             to="-500"
+                             dur="18s"
+                             repeatCount="indefinite" />
+                </polyline>
+            </svg>
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <div class="logo">Jayesh Dhoke</div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <!-- HERO -->
+        <section id="home" class="hero">
+            <div class="hero-container">
+                <div class="profile-image-container">
+    <div class="profile-ring"></div>
+
+    <img src="E:\Downloadsss\WhatsApp_Image_2025-11-29_at_2.13.26_PM-removebg-preview.png" alt="Jayesh Dhoke" class="profile-image">
+
+    <div class="name-badge">
+        <span>●</span> I am Jayesh Dhoke
+    </div>
+</div>
+
+
+
+                <div class="hero-content">
+                    <div class="hero-kicker">Data · Analytics · SQL · Python</div>
+                    <h1>
+                        Turning raw data into <span>clear, useful stories</span>.
+                    </h1>
+                    <p class="hero-tagline">
+                        Entry-level Data Analyst focused on SQL-driven analysis,
+                        clean dashboards, and practical insights that support real decisions.
+                    </p>
+
+                    <div class="hero-metrics">
+                        <div class="metric-pill">SQL Case Studies: Bank · Healthcare · HR · IMDB · Netflix</div>
+                        <div class="metric-pill">Tools: Python · MySQL · Power BI · Excel</div>
+                    </div>
+
+                    <p>
+                        I enjoy taking messy datasets, cleaning them, asking the right questions,
+                        and presenting the answers in a way that non-technical teams can trust and use.
+                        My projects are built to look like real business problems, not just academic exercises.
+                    </p>
+
+                    <div class="hero-buttons">
+                        <a href="#projects" class="cta-button cta-primary">View Projects</a>
+                        <a href="#contact" class="cta-button cta-outline">Contact Me</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about">
+            <div class="section-inner">
+                <h2 class="section-title">About Me</h2>
+                <p class="section-subtitle">
+                    How I think about data and problem-solving.
+                </p>
+                <div class="about-content">
+                    <p>
+                        I have a strong interest in analytics and a practical approach to solving problems.
+                        I like to start with a clear question, explore the data with SQL and Python, and then
+                        translate the findings into visuals and simple language that decision-makers can use.
+                        I’m comfortable working with structured data like transactions, customers, HR records,
+                        and digital content performance.
+                    </p>
+                    <br />
+                    <p>
+                        My focus right now is on sharpening my SQL logic, improving my dashboard design in tools
+                        like Power BI, and building more portfolio projects that connect directly to real business
+                        outcomes such as churn, revenue trends, and operational efficiency.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SKILLS -->
+        <section id="skills">
+            <div class="section-inner">
+                <h2 class="section-title">Skills & Tools</h2>
+                <p class="section-subtitle">
+                    Core technical skills I use to analyze, clean, and visualize data.
+                </p>
+                <div class="skills-grid">
+                    <div class="skill-card">
+                        <h3>📊 Data Analysis</h3>
+                        <p>Python (Pandas, NumPy), exploratory analysis, KPI creation, trend analysis, basic statistics.</p>
+                    </div>
+                    <div class="skill-card">
+                        <h3>🧮 SQL & Databases</h3>
+                        <p>MySQL, joins, subqueries, window functions, aggregations, query optimization basics.</p>
+                    </div>
+                    <div class="skill-card">
+                        <h3>📈 Visualization & Reporting</h3>
+                        <p>Power BI, Excel dashboards, charts, slicers, storytelling through visuals.</p>
+                    </div>
+                    <div class="skill-card">
+                        <h3>💼 Business Understanding</h3>
+                        <p>Banking, HR, healthcare & content platforms: retention, usage patterns, segment analysis.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS -->
+        <section id="projects">
+            <div class="section-inner">
+                <h2 class="section-title">Featured Projects</h2>
+                <p class="section-subtitle">
+                    SQL-first projects focused on real-world style datasets.
+                </p>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <div class="project-image">🏦</div>
+                        <div class="project-content">
+                            <h3>Bank Dataset Analysis Using SQL</h3>
+                            <p>
+                                Analyzed customer and transaction tables to understand deposits, loans,
+                                and product usage. Wrote queries to identify high-value customers,
+                                risk patterns, and product performance.
+                            </p>
+                            <a href="https://github.com/Jayesh-dev-glitch/Bank-Dataset-Analysis-in-SQL" target="_blank" class="project-link">
+                                View Project
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-image">🏥</div>
+                        <div class="project-content">
+                            <h3>Healthcare Dataset Analysis Using SQL</h3>
+                            <p>
+                                Explored patient visits, treatments, and hospital resource usage.
+                                Built queries to track admission trends, doctor load, and
+                                basic performance indicators for management.
+                            </p>
+                            <a href="https://github.com/Jayesh-dev-glitch/Healthcare-Dataset-Analysis-in-SQL" target="_blank" class="project-link">
+                                View Project
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-image">👥</div>
+                        <div class="project-content">
+                            <h3>HR Dataset Analysis Using SQL</h3>
+                            <p>
+                                Worked with employee, salary, and performance data to study attrition,
+                                promotion patterns, and pay distribution. Generated views that HR can use
+                                for better workforce planning.
+                            </p>
+                            <a href="https://github.com/Jayesh-dev-glitch/HR-Dataset-Analysis-in-SQL" target="_blank" class="project-link">
+                                View Project
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-image">🎬</div>
+                        <div class="project-content">
+                            <h3>IMDB Dataset Analysis Using SQL</h3>
+                            <p>
+                                Analyzed movie ratings, genres, and year-wise performance to see what kind
+                                of content performs well. Looked at rating distributions and consistency
+                                across different categories.
+                            </p>
+                            <a href="https://github.com/Jayesh-dev-glitch/IMDB-Dataset-Analysis-in-SQL" target="_blank" class="project-link">
+                                View Project
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-image">📺</div>
+                        <div class="project-content">
+                            <h3>Netflix Dataset Analysis Using SQL</h3>
+                            <p>
+                                Studied Netflix titles by country, type, and release year.
+                                Identified content mix, catalogue balance, and patterns
+                                that can connect to content strategy.
+                            </p>
+                            <a href="https://github.com/Jayesh-dev-glitch/Netflix-Dataset-Analysis-in-SQL" target="_blank" class="project-link">
+                                View Project
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-image">📱</div>
+                        <div class="project-content">
+                            <h3>Contact Book Using Python</h3>
+                            <p>
+                                Built a simple contact management app with add, search, update,
+                                and delete features. Data is stored for reuse, showing comfort
+                                with Python logic, file handling, and basic CLI UX.
+                            </p>
+                            <a href="https://github.com/Jayesh-dev-glitch/Contact-Book-Using-Python" target="_blank" class="project-link">
+                                View Project
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact">
+            <div class="section-inner">
+                <h2 class="section-title">Get In Touch</h2>
+                <p class="section-subtitle">
+                    Happy to connect for internships, entry-level roles, or project work.
+                </p>
+                <div class="contact-info">
+                    <div class="contact-card">
+                        <div class="contact-icon">✉️</div>
+                        <h3>Email</h3>
+                        <p>Best way to reach me directly.</p>
+                        <a href="mailto:jayeshdhoke1234@gmail.com">jayeshdhoke1234@gmail.com</a>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-icon">📞</div>
+                        <h3>Phone</h3>
+                        <p>For quick calls and coordination.</p>
+                        <a href="tel:+917820899986">+91 7820899986</a>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-icon">💼</div>
+                        <h3>LinkedIn</h3>
+                        <p>View my profile and experience.</p>
+                        <a href="https://www.linkedin.com/in/jayesh-21-dhoke/" target="_blank">Connect on LinkedIn</a>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-icon">💻</div>
+                        <h3>GitHub</h3>
+                        <p>See all my code and SQL projects.</p>
+                        <a href="https://github.com/Jayesh-dev-glitch" target="_blank">View GitHub Profile</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        &copy; <span>2025</span> Jayesh Dhoke · Data Analyst Portfolio
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
